@@ -6,6 +6,7 @@ const categoryRoute = require("express").Router(),
 //POST
 categoryRoute.route("/").post(async (req, res, next) => {
   let body = req.body;
+  body = { ...body, booksList: [] };
   try {
     const newCategory = await CategoryModel(body),
       { _id } = await newCategory.save();

@@ -5,7 +5,7 @@ const BookModel = new Schema(
   {
     title: { type: String, required: true },
     price: { type: Number, required: true },
-    category: { type: Schema.Types.ObjectId, ref: "Categories" },
+    category: { type: String, required: true },
     img: { type: String },
   },
   { timestamps: true }

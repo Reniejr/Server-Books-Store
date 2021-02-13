@@ -1,14 +1,18 @@
 const bookRoute = require("express").Router(),
-  BookModel = require("./model");
+  BookModel = require("./model"),
+  mongoose = require("mongoose");
 
 //METHODS
 
 //POST
-bookRoute.route("/").post(async (req, res, next) => {
+bookRoute.route("/:categoryId").post(async (req, res, next) => {
   let body = req.body;
+  const categoryId = req.params.categoryId;
+  body = { ...body, category: new mongoose.Types.ObjectId(categoryId) };
   try {
     const newBook = await BookModel(body),
       { asin } = await newBook.save();
+    res.send(newBook);
   } catch (error) {
     console.log(error);
     next(error);

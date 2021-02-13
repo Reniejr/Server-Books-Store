@@ -1,4 +1,5 @@
 const mainRoute = require("express").Router();
+const mongoose = require("mongoose");
 
 //MODEL IMPORTS
 const CategoryModel = require("./categories/model");
@@ -13,15 +14,30 @@ mainRoute.use("/categories", categoriesRoute);
 mainRoute.use("/books", booksRoute);
 
 //CONNECTED ENDPOINT
-mainRoute.route("/categories/:bookId").put(async (req, res, next) => {
-  //GET BOOK
-  const bookId = req.params.bookId;
-  const bookToAdd = await BookModel.findById(bookId);
-  //GET CATEGORY
-  let categoryId = req.query.categoryId;
-  const categoryToEdit = await CategoryModel.findById(categoryId);
-  //ADD BOOK TO CATEGORY
-});
+mainRoute
+  .route("/categories/listBooks/:categoryId")
+  .put(async (req, res, next) => {
+    //GET BOOK
+    let bookId = req.query.bookId;
+    //GET CATEGORY
+    const categoryId = req.params.categoryId;
+    //INSERT BOOK IN BOOKSLIST
+    let body = req.body;
+    body = {
+      ...body,
+      booksList: body.booksList.concat(new mongoose.Types.ObjectId(bookId)),
+    };
+    //ADD BOOK TO CATEGORY
+    try {
+      const editCategory = await CategoryModel.findByIdAndUpdate(categoryId);
+      res.send(
+        `Book with ID : ${bookId} has been added to category ${categoryId}`
+      );
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
+  });
 
 //EXPORT
 module.exports = mainRoute;
