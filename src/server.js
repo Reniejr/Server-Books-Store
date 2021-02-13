@@ -21,7 +21,11 @@ const server = express(),
   PORT = process.env.PORT || 5001,
   accessOrigins =
     process.env.NODE_ENV !== "production"
-      ? [process.env.FE_URL_DEV, process.env.FE_URL_PROD]
+      ? [
+          process.env.FE_URL_DEV,
+          process.env.FE_URL_PROD,
+          process.env.BE_URL_PROD,
+        ]
       : [process.env.FE_URL_DEV],
   corsOptions = {
     origin: (origin, callback) => {
